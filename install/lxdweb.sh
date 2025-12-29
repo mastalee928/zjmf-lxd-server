@@ -243,6 +243,8 @@ echo
 
 DEFAULT_PORT="3000"
 DEFAULT_SESSION_SECRET=$(openssl rand -hex 32)
+DEFAULT_ADMIN_USER="admin"
+DEFAULT_ADMIN_PASS="admin123"
 
 if [[ ! -f "$CFG" ]]; then
   info "配置文件不存在，开始配置向导..."
@@ -253,6 +255,15 @@ if [[ ! -f "$CFG" ]]; then
   
   read -p "Session 密钥 [自动生成]: " SESSION_SECRET
   SESSION_SECRET=${SESSION_SECRET:-$DEFAULT_SESSION_SECRET}
+  
+  echo
+  info "配置管理员账户..."
+  read -p "管理员用户名 [$DEFAULT_ADMIN_USER]: " ADMIN_USER
+  ADMIN_USER=${ADMIN_USER:-$DEFAULT_ADMIN_USER}
+  
+  read -sp "管理员密码 [$DEFAULT_ADMIN_PASS]: " ADMIN_PASS
+  echo
+  ADMIN_PASS=${ADMIN_PASS:-$DEFAULT_ADMIN_PASS}
   
   info "生成配置文件..."
   cat > "$CFG" <<EOF
@@ -273,6 +284,11 @@ server:
 database:
   # 数据库文件路径
   path: "$DB_FILE"
+
+admin:
+  # 默认管理员账户
+  username: "$ADMIN_USER"
+  password: "$ADMIN_PASS"
 
 logging:
   # 日志级别: debug | info | warn | error
@@ -351,12 +367,11 @@ echo "配置文件: $CFG"
 echo "数据库: SQLite ($DB_FILE)"
 echo
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "管理员账户管理命令 (服务后台运行时可用):"
+echo "管理员账户:"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  lxdweb admin create          创建新管理员"
-echo "  lxdweb admin password        修改管理员密码"
-echo "  lxdweb admin list            列出所有管理员"
-echo "  lxdweb admin delete          删除管理员"
+ADMIN_USER_DISPLAY=$(grep 'username:' "$CFG" | grep -A1 'admin:' | tail -1 | awk -F'"' '{print $2}')
+echo "  用户名: ${ADMIN_USER_DISPLAY:-admin}"
+echo "  密码:   (已在配置向导中设置)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo
 echo "========================================"

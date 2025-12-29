@@ -11,7 +11,8 @@ type Node struct {
 	APIKey         string         `json:"api_key" gorm:"size:500"`          
 	Status         string         `json:"status" gorm:"size:50;default:'inactive'"` 
 	LastCheck      *time.Time     `json:"last_check"`
-	SyncPreset     string         `json:"sync_preset" gorm:"size:50;default:'medium'"`
+	AutoSync       bool           `json:"auto_sync" gorm:"default:false"`
+	SyncInterval   int            `json:"sync_interval" gorm:"default:300"`
 	BatchSize      int            `json:"batch_size" gorm:"default:5"`
 	BatchInterval  int            `json:"batch_interval" gorm:"default:5"`
 	CreatedAt      time.Time      `json:"created_at"`
@@ -23,7 +24,8 @@ type CreateNodeRequest struct {
 	Description   string `json:"description"`
 	Address       string `json:"address" binding:"required"`
 	APIKey        string `json:"api_key"`
-	SyncPreset    string `json:"sync_preset"`
+	AutoSync      bool   `json:"auto_sync"`
+	SyncInterval  int    `json:"sync_interval"`
 	BatchSize     int    `json:"batch_size"`
 	BatchInterval int    `json:"batch_interval"`
 }
@@ -32,7 +34,8 @@ type UpdateNodeRequest struct {
 	Description   string `json:"description"`
 	Address       string `json:"address"`
 	APIKey        string `json:"api_key"`
-	SyncPreset    string `json:"sync_preset"`
+	AutoSync      bool   `json:"auto_sync"`
+	SyncInterval  int    `json:"sync_interval"`
 	BatchSize     int    `json:"batch_size"`
 	BatchInterval int    `json:"batch_interval"`
 }

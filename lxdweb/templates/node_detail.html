@@ -78,11 +78,6 @@
                 </div>
             </a>
         </div>
-                        </svg>
-                    </div>
-                </div>
-            </a>
-        </div>
 
         <!-- 节点系统信息 -->
         <div class="bg-white rounded-lg shadow-sm">
@@ -143,8 +138,8 @@
                     <p class="text-sm font-medium text-gray-800">${node.last_check ? new Date(node.last_check).toLocaleString('zh-CN') : '从未检查'}</p>
                 </div>
                 <div class="bg-white p-4 rounded-lg border">
-                    <p class="text-xs text-gray-500 mb-1">同步配置</p>
-                    <p class="text-sm font-medium text-gray-800">${getSyncPresetName(node.sync_preset)}</p>
+                    <p class="text-xs text-gray-500 mb-1">自动同步</p>
+                    <p class="text-sm font-medium text-gray-800">${node.auto_sync ? '已启用' : '已禁用'}</p>
                 </div>
             `;
             $('#systemInfoSection').html(sysHtml);
@@ -155,7 +150,8 @@
                     <div><span class="font-medium">节点名称:</span> ${node.name}</div>
                     <div><span class="font-medium">API地址:</span> <code class="bg-gray-200 px-2 py-1 rounded text-xs">${node.address}</code></div>
                     <div><span class="font-medium">状态:</span> ${node.status}</div>
-                    <div><span class="font-medium">同步策略:</span> ${getSyncPresetName(node.sync_preset)}</div>
+                    <div><span class="font-medium">自动同步:</span> ${node.auto_sync ? '已启用' : '已禁用'}</div>
+                    <div><span class="font-medium">同步间隔:</span> ${node.sync_interval} 秒</div>
                     <div><span class="font-medium">批次大小:</span> ${node.batch_size} 个</div>
                     <div><span class="font-medium">批次间隔:</span> ${node.batch_interval} 秒</div>
                     <div><span class="font-medium">创建时间:</span> ${new Date(node.created_at).toLocaleString('zh-CN')}</div>
@@ -164,39 +160,11 @@
             $('#detailedSystemInfo').html(infoHtml);
         }
 
-        function getSyncPresetName(preset) {
-            const presets = {
-                'low': '低配',
-                'medium': '中配',
-                'high': '高配',
-                'custom': '自定义'
-            };
-            return presets[preset] || '未知';
-        }
-
         function loadNodeStats() {
             $.get(`/api/containers/cache?node_id=${nodeId}`, function(result) {
                 if (result.code === 200) {
                     const containers = result.data || [];
                     $('#statsContainers').text(containers.length + ' 个');
-                }
-            });
-
-            $.get(`/api/nat?node_id=${nodeId}`, function(result) {
-                if (result.code === 200) {
-                    $('#statsNAT').text((result.data || []).length + ' 条');
-                }
-            });
-
-            $.get(`/api/ipv6?node_id=${nodeId}`, function(result) {
-                if (result.code === 200) {
-                    $('#statsIPv6').text((result.data || []).length + ' 条');
-                }
-            });
-
-            $.get(`/api/proxy-configs?node_id=${nodeId}`, function(result) {
-                if (result.code === 200) {
-                    $('#statsProxy').text((result.data || []).length + ' 条');
                 }
             });
         }

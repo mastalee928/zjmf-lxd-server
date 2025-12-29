@@ -1419,6 +1419,9 @@ const docTemplate = `{
                 "api_key": {
                     "type": "string"
                 },
+                "auto_sync": {
+                    "type": "boolean"
+                },
                 "batch_interval": {
                     "type": "integer"
                 },
@@ -1431,8 +1434,8 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "sync_preset": {
-                    "type": "string"
+                "sync_interval": {
+                    "type": "integer"
                 }
             }
         },
@@ -1445,6 +1448,9 @@ const docTemplate = `{
                 "api_key": {
                     "type": "string"
                 },
+                "auto_sync": {
+                    "type": "boolean"
+                },
                 "batch_interval": {
                     "type": "integer"
                 },
@@ -1457,8 +1463,8 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "sync_preset": {
-                    "type": "string"
+                "sync_interval": {
+                    "type": "integer"
                 }
             }
         }
@@ -1472,7 +1478,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0.7",
+	Version:          "1.1.0",
 	Host:             "localhost:3000",
 	BasePath:         "/",
 	Schemes:          []string{},

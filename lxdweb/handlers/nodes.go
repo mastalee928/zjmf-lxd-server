@@ -16,21 +16,6 @@ import (
 	"gorm.io/gorm"
 )
 
-func applySyncPreset(preset string) (batchSize int, batchInterval int) {
-	switch preset {
-	case "low":
-		return 3, 10
-	case "medium":
-		return 5, 5
-	case "high":
-		return 10, 3
-	case "custom":
-		return 0, 0
-	default:
-		return 5, 5
-	}
-}
-
 // NodesPage 节点管理页面
 // @Summary 节点管理页面
 // @Description 显示节点管理页面
@@ -204,7 +189,8 @@ func CreateNode(c *gin.Context) {
 	logger.Global.Info(ctx, "收到创建节点请求",
 		zap.String("name", req.Name),
 		zap.String("address", req.Address),
-		zap.String("sync_preset", req.SyncPreset),
+		zap.Bool("auto_sync", req.AutoSync),
+		zap.Int("sync_interval", req.SyncInterval),
 		zap.Int("batch_size", req.BatchSize),
 		zap.Int("batch_interval", req.BatchInterval),
 		zap.String("action", "create_node"))
@@ -221,21 +207,18 @@ func CreateNode(c *gin.Context) {
 		})
 		return
 	}
-	syncPreset := req.SyncPreset
-	if syncPreset == "" {
-		syncPreset = "medium"
+	
+	syncInterval := req.SyncInterval
+	if syncInterval <= 0 {
+		syncInterval = 300
 	}
 	
 	batchSize := req.BatchSize
-	batchInterval := req.BatchInterval
-	
-	if syncPreset != "custom" {
-		batchSize, batchInterval = applySyncPreset(syncPreset)
-	}
-	
 	if batchSize <= 0 {
 		batchSize = 5
 	}
+	
+	batchInterval := req.BatchInterval
 	if batchInterval <= 0 {
 		batchInterval = 5
 	}
@@ -246,7 +229,8 @@ func CreateNode(c *gin.Context) {
 		Address:       req.Address,
 		APIKey:        req.APIKey,
 		Status:        "inactive",
-		SyncPreset:    syncPreset,
+		AutoSync:      req.AutoSync,
+		SyncInterval:  syncInterval,
 		BatchSize:     batchSize,
 		BatchInterval: batchInterval,
 	}
@@ -353,23 +337,17 @@ func UpdateNode(c *gin.Context) {
 		updates["api_key"] = req.APIKey
 	}
 	
-	if req.SyncPreset != "" {
-		updates["sync_preset"] = req.SyncPreset
-		
-		if req.SyncPreset != "custom" {
-			batchSize, batchInterval := applySyncPreset(req.SyncPreset)
-			updates["batch_size"] = batchSize
-			updates["batch_interval"] = batchInterval
-		}
+	updates["auto_sync"] = req.AutoSync
+	
+	if req.SyncInterval > 0 {
+		updates["sync_interval"] = req.SyncInterval
 	}
 	
-	if req.SyncPreset == "custom" {
-		if req.BatchSize > 0 {
-			updates["batch_size"] = req.BatchSize
-		}
-		if req.BatchInterval > 0 {
-			updates["batch_interval"] = req.BatchInterval
-		}
+	if req.BatchSize > 0 {
+		updates["batch_size"] = req.BatchSize
+	}
+	if req.BatchInterval > 0 {
+		updates["batch_interval"] = req.BatchInterval
 	}
 	
 	if err := database.DB.Model(&node).Updates(updates).Error; err != nil {
@@ -590,7 +568,8 @@ func ExportNodes(c *gin.Context) {
 			"address":        node.Address,
 			"api_key":        node.APIKey,
 			"description":    node.Description,
-			"sync_preset":    node.SyncPreset,
+			"auto_sync":      node.AutoSync,
+			"sync_interval":  node.SyncInterval,
 			"batch_size":     node.BatchSize,
 			"batch_interval": node.BatchInterval,
 		})
@@ -643,22 +622,18 @@ func ImportNodes(c *gin.Context) {
 			continue
 		}
 
-		syncPreset, _ := nodeData["sync_preset"].(string)
-		if syncPreset == "" {
-			syncPreset = "medium"
+		autoSync, _ := nodeData["auto_sync"].(bool)
+		syncInterval, _ := nodeData["sync_interval"].(float64)
+		if syncInterval == 0 {
+			syncInterval = 300
 		}
 
 		batchSize, _ := nodeData["batch_size"].(float64)
-		batchInterval, _ := nodeData["batch_interval"].(float64)
-		
-		if syncPreset != "custom" {
-			bs, bi := applySyncPreset(syncPreset)
-			batchSize = float64(bs)
-			batchInterval = float64(bi)
-		}
 		if batchSize == 0 {
 			batchSize = 5
 		}
+		
+		batchInterval, _ := nodeData["batch_interval"].(float64)
 		if batchInterval == 0 {
 			batchInterval = 5
 		}
@@ -672,7 +647,8 @@ func ImportNodes(c *gin.Context) {
 			APIKey:        apiKey,
 			Description:   description,
 			Status:        "inactive",
-			SyncPreset:    syncPreset,
+			AutoSync:      autoSync,
+			SyncInterval:  int(syncInterval),
 			BatchSize:     int(batchSize),
 			BatchInterval: int(batchInterval),
 		}

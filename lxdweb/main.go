@@ -1,5 +1,5 @@
 // @title LXD Web 管理平台
-// @version 1.0.7
+// @version 1.1.0
 // @description LXD 容器管理 Web 平台，提供多节点管理、容器监控等功能
 // @termsOfService https://github.com/xkatld/zjmf-lxd-server
 

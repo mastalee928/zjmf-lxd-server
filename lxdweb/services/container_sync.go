@@ -78,6 +78,17 @@ func RefreshNodeContainers(nodeID uint, manual bool) error {
 	
 	log.Printf("[REFRESH] 开始刷新节点 %s (ID: %d)%s", node.Name, node.ID, map[bool]string{true: " [手动]", false: ""}[manual])
 
+	// 第一步：刷新 lxdapi 缓存
+	log.Printf("[REFRESH] 步骤1: 调用节点 %s 刷新缓存", node.Name)
+	refreshResult := callNodeAPI(node, "GET", "/api/cache/containers/refresh", nil)
+	if refreshResult["code"] != float64(200) {
+		log.Printf("[REFRESH] 节点 %s 刷新缓存失败: %v，继续尝试获取旧缓存", node.Name, refreshResult["msg"])
+	} else {
+		log.Printf("[REFRESH] 节点 %s 缓存刷新成功", node.Name)
+	}
+
+	// 第二步：获取缓存数据
+	log.Printf("[REFRESH] 步骤2: 获取节点 %s 缓存数据", node.Name)
 	listResult := callNodeAPI(node, "GET", "/api/cache/containers", nil)
 	if listResult["code"] != float64(200) {
 		task.Status = "failed"

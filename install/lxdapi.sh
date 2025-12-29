@@ -395,8 +395,22 @@ if [[ $IPV6_BINDING_ENABLED == "true" ]]; then
   echo "==== IPv6 独立绑定配置 ===="
   read -p "IPv6 绑定网卡接口 [$DEFAULT_INTERFACE]: " IPV6_BINDING_INTERFACE
   IPV6_BINDING_INTERFACE=${IPV6_BINDING_INTERFACE:-$DEFAULT_INTERFACE}
+  
+  echo
+  echo "配置 IPv6 地址池："
+  read -p "IPv6 起始地址 (例如: 2001:db8::1): " IPV6_POOL_START
+  IPV6_POOL_START=${IPV6_POOL_START:-"2001:db8::1"}
+  
+  read -p "IPv6 前缀长度 [64]: " IPV6_POOL_PREFIX
+  IPV6_POOL_PREFIX=${IPV6_POOL_PREFIX:-64}
+  
+  read -p "IPv6 地址池大小 [1000]: " IPV6_POOL_SIZE
+  IPV6_POOL_SIZE=${IPV6_POOL_SIZE:-1000}
 else
   IPV6_BINDING_INTERFACE=""
+  IPV6_POOL_START="2001:db8::1"
+  IPV6_POOL_PREFIX=64
+  IPV6_POOL_SIZE=1000
 fi
 
 ok "网络配置完成"
@@ -485,6 +499,9 @@ replace_config_var "NETWORK_EXTERNAL_IPV4" "$NETWORK_IPV4"
 
 replace_config_var "IPV6_BINDING_ENABLED" "$IPV6_BINDING_ENABLED"
 replace_config_var "IPV6_BINDING_INTERFACE" "$IPV6_BINDING_INTERFACE"
+replace_config_var "IPV6_POOL_START" "$IPV6_POOL_START"
+replace_config_var "IPV6_POOL_PREFIX" "$IPV6_POOL_PREFIX"
+replace_config_var "IPV6_POOL_SIZE" "$IPV6_POOL_SIZE"
 
 replace_config_var "TRAFFIC_INTERVAL" "$TRAFFIC_INTERVAL"
 replace_config_var "TRAFFIC_BATCH_SIZE" "$TRAFFIC_BATCH_SIZE"

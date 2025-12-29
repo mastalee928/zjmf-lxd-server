@@ -52,15 +52,7 @@
             </div>
         </div>
 
-        <!-- Tab导航 -->
-        <div role="tablist" class="tabs tabs-boxed bg-white p-2 rounded-lg shadow-sm mb-6">
-            <a role="tab" class="tab tab-active" onclick="switchTab('info')">信息</a>
-            <a role="tab" class="tab" onclick="switchTab('nat')">NAT端口转发</a>
-            <a role="tab" class="tab" onclick="switchTab('ipv6')">IPv6地址</a>
-            <a role="tab" class="tab" onclick="switchTab('proxy')">反向代理</a>
-        </div>
-
-        <!-- Tab内容 -->
+        <!-- 容器信息 -->
         <div id="tabContent">
             <!-- 信息Tab -->
             <div id="infoTab" class="tab-pane active">
@@ -94,16 +86,16 @@
         <div class="bg-white rounded-lg border border-gray-200 p-4 mb-4">
             <h2 class="text-base font-semibold text-gray-800 mb-3">容器操作</h2>
             <div class="flex flex-wrap gap-1.5">
-                <button onclick="startContainer()" class="px-2 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded transition">启动</button>
-                <button onclick="stopContainer()" class="px-2 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded transition">停止</button>
-                <button onclick="restartContainer()" class="px-2 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded transition">重启</button>
-                <button onclick="suspendContainer()" class="px-2 py-1.5 text-xs font-medium text-yellow-700 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 rounded transition">暂停</button>
-                <button onclick="unsuspendContainer()" class="px-2 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded transition">恢复</button>
-                <button onclick="showResetPasswordModal()" class="px-2 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded transition">重置密码</button>
-                <button onclick="showReinstallModal()" class="px-2 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded transition">重装系统</button>
-                <button onclick="resetTraffic()" class="px-2 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded transition">重置流量</button>
-                <button onclick="openConsole()" class="px-2 py-1.5 text-xs font-medium text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 rounded transition">控制台</button>
-                <button onclick="deleteContainer()" class="px-2 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition">删除容器</button>
+                <button onclick="startContainer()" class="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded transition">启动</button>
+                <button onclick="stopContainer()" class="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded transition">停止</button>
+                <button onclick="restartContainer()" class="px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded transition">重启</button>
+                <button onclick="suspendContainer()" class="px-3 py-1.5 text-xs font-medium text-yellow-700 bg-yellow-50 hover:bg-yellow-100 border border-yellow-200 rounded transition">暂停</button>
+                <button onclick="unsuspendContainer()" class="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded transition">恢复</button>
+                <button onclick="showResetPasswordModal()" class="px-3 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded transition">重置密码</button>
+                <button onclick="showReinstallModal()" class="px-3 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded transition">重装系统</button>
+                <button onclick="resetTraffic()" class="px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded transition">重置流量</button>
+                <button onclick="openConsole()" class="px-3 py-1.5 text-xs font-medium text-cyan-700 bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 rounded transition">控制台</button>
+                <button onclick="deleteContainer()" class="px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition">删除容器</button>
             </div>
         </div>
 
@@ -155,60 +147,6 @@
                 </div>
             </div>
         </div>
-            </div>
-
-            <!-- NAT Tab -->
-            <div id="natTab" class="tab-pane" style="display: none;">
-                <div class="bg-white rounded-lg border border-gray-200 p-4 mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-base font-semibold text-gray-800">NAT端口转发</h2>
-                        <button onclick="showAddNATModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            添加端口转发
-                        </button>
-                    </div>
-                    <div id="natRulesList">
-                        <p class="text-center text-gray-500 py-4 text-xs">加载中...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- IPv6 Tab -->
-            <div id="ipv6Tab" class="tab-pane" style="display: none;">
-                <div class="bg-white rounded-lg border border-gray-200 p-4 mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-base font-semibold text-gray-800">IPv6地址绑定</h2>
-                        <button onclick="showAddIPv6Modal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            添加IPv6地址
-                        </button>
-                    </div>
-                    <div id="ipv6List">
-                        <p class="text-center text-gray-500 py-4 text-xs">加载中...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 反向代理 Tab -->
-            <div id="proxyTab" class="tab-pane" style="display: none;">
-                <div class="bg-white rounded-lg border border-gray-200 p-4 mb-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-base font-semibold text-gray-800">反向代理配置</h2>
-                        <button onclick="showAddProxyModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            添加代理配置
-                        </button>
-                    </div>
-                    <div id="proxyList">
-                        <p class="text-center text-gray-500 py-4 text-xs">加载中...</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -389,47 +327,10 @@
 
         $(document).ready(function() {
             loadContainerInfo();
-            loadNATRules();
-            loadIPv6Bindings();
-            loadProxyConfigs();
 
             $.get(`/api/nodes/${nodeId}`, function(result) {
                 if (result.code === 200) {
                     $('#breadcrumbNodeName').text(result.data.name);
-                }
-            });
-
-            $('#addNATForm').submit(function(e) {
-                e.preventDefault();
-                submitAddNAT();
-            });
-
-            $('#addIPv6Form').submit(function(e) {
-                e.preventDefault();
-                submitAddIPv6();
-            });
-
-            $('#addProxyForm').submit(function(e) {
-                e.preventDefault();
-                submitAddProxy();
-            });
-
-            $('#proxySSLEnabled').on('change', function() {
-                if ($(this).is(':checked')) {
-                    $('#proxySSLOptions').slideDown(200);
-                } else {
-                    $('#proxySSLOptions').slideUp(200);
-                    $('#proxyCustomCertFields').slideUp(200);
-                }
-            });
-
-            $('#proxySSLType').on('change', function() {
-                if ($(this).val() === 'custom') {
-                    $('#proxyCustomCertFields').slideDown(200);
-                } else {
-                    $('#proxyCustomCertFields').slideUp(200);
-                    $('#proxySSLCert').val('');
-                    $('#proxySSLKey').val('');
                 }
             });
 
@@ -451,34 +352,6 @@
                 loadContainerInfo();
             }, 10000);
         });
-
-        function switchTab(tabName) {
-            // 隐藏所有tab内容
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.style.display = 'none';
-            });
-            
-            // 移除所有tab的active类
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('tab-active');
-            });
-            
-            // 显示选中的tab内容
-            const tabMap = {
-                'info': 'infoTab',
-                'nat': 'natTab',
-                'ipv6': 'ipv6Tab',
-                'proxy': 'proxyTab'
-            };
-            
-            const selectedPane = document.getElementById(tabMap[tabName]);
-            if (selectedPane) {
-                selectedPane.style.display = 'block';
-            }
-            
-            // 激活选中的tab
-            event.target.classList.add('tab-active');
-        }
 
         function initCharts() {
             const commonOptions = {
@@ -728,109 +601,6 @@
             if (trafficChart) trafficChart.update('none');
         }
 
-        function loadNATRules() {
-            $.get(`/api/nat?node_id=${nodeId}`, function(result) {
-                if (result.code === 200) {
-                    const rules = (result.data || []).filter(r => r.container_hostname === containerName);
-                    renderNATRules(rules);
-                } else {
-                    $('#natRulesList').html('<p class="text-center text-gray-500 py-4">加载失败</p>');
-                }
-            });
-        }
-
-        function renderNATRules(rules) {
-            if (rules.length === 0) {
-                $('#natRulesList').html('<p class="text-center text-gray-500 py-4 text-xs">暂无端口转发规则</p>');
-                return;
-            }
-
-            let html = '<div class="overflow-x-auto"><table class="table table-xs"><thead><tr class="bg-gray-50"><th class="text-xs text-gray-600">外部端口</th><th class="text-xs text-gray-600">内部端口</th><th class="text-xs text-gray-600">协议</th><th class="text-xs text-gray-600">描述</th><th class="text-xs text-gray-600">操作</th></tr></thead><tbody>';
-            rules.forEach(r => {
-                html += `<tr class="hover">
-                    <td><span class="px-2 py-0.5 text-xs font-medium text-blue-700 bg-blue-100 rounded">${r.external_port}</span></td>
-                    <td class="text-xs text-gray-700">${r.internal_port}</td>
-                    <td><span class="px-2 py-0.5 text-xs font-medium text-gray-700 bg-gray-100 rounded">${r.protocol.toUpperCase()}</span></td>
-                    <td class="text-xs text-gray-600">${r.description || '-'}</td>
-                    <td><button onclick="deleteNAT(${r.id})" class="px-2 py-1 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition">删除</button></td>
-                </tr>`;
-            });
-            html += '</tbody></table></div>';
-            $('#natRulesList').html(html);
-        }
-
-        function loadIPv6Bindings() {
-            $.get(`/api/ipv6?node_id=${nodeId}`, function(result) {
-                if (result.code === 200) {
-                    const bindings = (result.data || []).filter(b => b.hostname === containerName);
-                    renderIPv6Bindings(bindings);
-                } else {
-                    $('#ipv6List').html('<p class="text-center text-gray-500 py-4">加载失败</p>');
-                }
-            });
-        }
-
-        function renderIPv6Bindings(bindings) {
-            if (bindings.length === 0) {
-                $('#ipv6List').html('<p class="text-center text-gray-500 py-4 text-xs">暂无IPv6地址绑定</p>');
-                return;
-            }
-
-            let html = '<div class="overflow-x-auto"><table class="table table-xs"><thead><tr class="bg-gray-50"><th class="text-xs text-gray-600">IPv6地址</th><th class="text-xs text-gray-600">网卡接口</th><th class="text-xs text-gray-600">操作</th></tr></thead><tbody>';
-            bindings.forEach(b => {
-                html += `<tr class="hover">
-                    <td><code class="text-xs font-mono text-gray-700">${b.ipv6_address}</code></td>
-                    <td><span class="px-2 py-0.5 text-xs font-medium text-gray-700 bg-gray-100 rounded">${b.interface}</span></td>
-                    <td><button onclick="deleteIPv6(${b.id})" class="px-2 py-1 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition">删除</button></td>
-                </tr>`;
-            });
-            html += '</tbody></table></div>';
-            $('#ipv6List').html(html);
-        }
-
-        function loadProxyConfigs() {
-            $.get(`/api/proxy-configs?node_id=${nodeId}`, function(result) {
-                if (result.code === 200) {
-                    const configs = (result.data || []).filter(p => p.hostname === containerName);
-                    renderProxyConfigs(configs);
-                } else {
-                    $('#proxyList').html('<p class="text-center text-gray-500 py-4">加载失败</p>');
-                }
-            });
-        }
-
-        function renderProxyConfigs(configs) {
-            if (configs.length === 0) {
-                $('#proxyList').html('<p class="text-center text-gray-500 py-4 text-xs">暂无反向代理配置</p>');
-                return;
-            }
-
-            let html = '<div class="overflow-x-auto"><table class="table table-xs"><thead><tr class="bg-gray-50"><th class="text-xs text-gray-600">域名</th><th class="text-xs text-gray-600">后端端口</th><th class="text-xs text-gray-600">协议</th><th class="text-xs text-gray-600">操作</th></tr></thead><tbody>';
-            configs.forEach(p => {
-                const sslEnabled = p.ssl_enabled || false;
-                const sslType = p.ssl_type || 'none';
-                
-                let protocolBadge = '';
-                if (sslEnabled) {
-                    const sslTypeBadge = sslType === 'self-signed' ? 
-                        '<span class="badge badge-warning badge-xs ml-1">自签</span>' : 
-                        '<span class="badge badge-info badge-xs ml-1">自定义</span>';
-                    protocolBadge = `<span class="badge badge-success badge-sm">HTTPS${sslTypeBadge}</span>`;
-                } else {
-                    protocolBadge = '<span class="badge badge-ghost badge-sm">HTTP</span>';
-                }
-                
-                html += `<tr class="hover">
-                    <td><code class="text-xs font-mono text-gray-700">${p.domain}</code></td>
-                    <td class="text-xs text-gray-700">${p.backend_port}</td>
-                    <td>${protocolBadge}</td>
-                    <td><button onclick="deleteProxy(${p.id})" class="px-2 py-1 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition">删除</button></td>
-                </tr>`;
-            });
-            html += '</tbody></table></div>';
-            $('#proxyList').html(html);
-        }
-
         // 容器操作函数
         function openConsole() {
             // 检查容器状态
@@ -950,238 +720,6 @@
                     setTimeout(() => loadContainerInfo(), 2000);
                 } else {
                     showToast('error', result.msg || '操作失败');
-                }
-            });
-        }
-
-        // 模态框函数
-        function checkNATPort() {
-            const port = $('#natExternalPort').val();
-            const protocol = $('#natProtocol').val();
-            
-            if (!port) {
-                $('#natPortCheck').html('');
-                return;
-            }
-
-            // 验证端口范围
-            const portNum = parseInt(port);
-            if (portNum < 10000 || portNum > 65535) {
-                $('#natPortCheck').html('<span class="text-error">✗ 端口必须在 10000-65535 范围内</span>');
-                $('#natSubmitBtn').prop('disabled', true);
-                return;
-            }
-            
-            $('#natPortCheck').html('<span class="loading loading-spinner loading-xs"></span> 检测中...');
-            $('#natSubmitBtn').prop('disabled', true);
-            
-            $.get(`/api/nat/check?node_id=${nodeId}&hostname=${containerName}&port=${port}&protocol=${protocol}`, function(result) {
-                if (result.code === 200) {
-                    if (result.data && result.data.available) {
-                        $('#natPortCheck').html('<span class="text-success">✓ 端口可用</span>');
-                        $('#natSubmitBtn').prop('disabled', false);
-                    } else {
-                        $('#natPortCheck').html('<span class="text-error">✗ 端口已被占用</span>');
-                        $('#natSubmitBtn').prop('disabled', true);
-                    }
-                } else {
-                    $('#natPortCheck').html('<span class="text-warning">检测失败: ' + (result.msg || '未知错误') + '</span>');
-                    $('#natSubmitBtn').prop('disabled', true);
-                }
-            }).fail(function() {
-                $('#natPortCheck').html('<span class="text-warning">检测失败</span>');
-                $('#natSubmitBtn').prop('disabled', true);
-            });
-        }
-
-        function showAddNATModal() {
-            $('#natPortCheck').html('');
-            $('#natSubmitBtn').prop('disabled', false);
-            document.getElementById('addNATModal').showModal();
-        }
-
-        function closeAddNATModal() {
-            document.getElementById('addNATModal').close();
-            $('#addNATForm')[0].reset();
-            $('#natPortCheck').html('');
-            $('#natSubmitBtn').prop('disabled', false);
-        }
-
-        function submitAddNAT() {
-            const externalPort = parseInt($('#natExternalPort').val());
-            
-            // 再次验证端口范围
-            if (externalPort < 10000 || externalPort > 65535) {
-                showToast('error', '外部端口必须在 10000-65535 范围内');
-                return;
-            }
-
-            const data = {
-                node_id: nodeId,
-                container_hostname: containerName,
-                protocol: $('#natProtocol').val(),
-                external_port: externalPort,
-                internal_port: parseInt($('#natInternalPort').val()),
-                description: $('#natDescription').val()
-            };
-
-            $('#natSubmitBtn').prop('disabled', true);
-
-            $.ajax({
-                url: '/api/nat',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(result) {
-                    if (result.code === 200) {
-                        showToast('success', 'NAT规则添加成功');
-                        closeAddNATModal();
-                        loadNATRules();
-                    } else {
-                        showToast('error', result.msg || '添加失败');
-                        $('#natSubmitBtn').prop('disabled', false);
-                    }
-                },
-                error: function() {
-                    showToast('error', '添加失败，请重试');
-                    $('#natSubmitBtn').prop('disabled', false);
-                }
-            });
-        }
-
-        function deleteNAT(id) {
-            if (!confirm('确定要删除此端口转发规则吗？')) return;
-            $.ajax({
-                url: `/api/nat/${id}`,
-                type: 'DELETE',
-                success: function(result) {
-                    if (result.code === 200) {
-                        showToast('success', '删除成功');
-                        loadNATRules();
-                    } else {
-                        showToast('error', result.msg || '删除失败');
-                    }
-                }
-            });
-        }
-
-        function showAddIPv6Modal() {
-            document.getElementById('addIPv6Modal').showModal();
-        }
-
-        function closeAddIPv6Modal() {
-            document.getElementById('addIPv6Modal').close();
-            $('#addIPv6Form')[0].reset();
-        }
-
-        function submitAddIPv6() {
-            const data = {
-                node_id: nodeId,
-                container_hostname: containerName,
-                description: $('#ipv6Description').val()
-            };
-
-            $.ajax({
-                url: '/api/ipv6',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(result) {
-                    if (result.code === 200) {
-                        showToast('success', '添加成功');
-                        closeAddIPv6Modal();
-                        loadIPv6Bindings();
-                    } else {
-                        showToast('error', result.msg || '添加失败');
-                    }
-                }
-            });
-        }
-
-        function deleteIPv6(id) {
-            if (!confirm('确定要删除此IPv6地址绑定吗？')) return;
-            $.ajax({
-                url: `/api/ipv6/${id}`,
-                type: 'DELETE',
-                success: function(result) {
-                    if (result.code === 200) {
-                        showToast('success', '删除成功');
-                        loadIPv6Bindings();
-                    } else {
-                        showToast('error', result.msg || '删除失败');
-                    }
-                }
-            });
-        }
-
-        function showAddProxyModal() {
-            document.getElementById('addProxyModal').showModal();
-        }
-
-        function closeAddProxyModal() {
-            document.getElementById('addProxyModal').close();
-            $('#addProxyForm')[0].reset();
-            $('#proxySSLOptions').hide();
-            $('#proxyCustomCertFields').hide();
-        }
-
-        function submitAddProxy() {
-            const sslEnabled = $('#proxySSLEnabled').is(':checked');
-            const sslType = $('#proxySSLType').val();
-
-            if (sslEnabled && sslType === 'custom') {
-                const cert = $('#proxySSLCert').val().trim();
-                const key = $('#proxySSLKey').val().trim();
-                if (!cert || !key) {
-                    showToast('error', '启用自定义SSL证书时，必须提供证书和私钥内容');
-                    return;
-                }
-            }
-
-            const data = {
-                node_id: nodeId,
-                container_hostname: containerName,
-                domain: $('#proxyDomain').val(),
-                container_port: parseInt($('#proxyBackendPort').val()),
-                description: '',
-                ssl_enabled: sslEnabled,
-                ssl_type: sslEnabled ? sslType : 'none'
-            };
-
-            if (sslEnabled && sslType === 'custom') {
-                data.ssl_cert = $('#proxySSLCert').val();
-                data.ssl_key = $('#proxySSLKey').val();
-            }
-
-            $.ajax({
-                url: '/api/proxy-configs',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(result) {
-                    if (result.code === 200) {
-                        showToast('success', '添加成功');
-                        closeAddProxyModal();
-                        loadProxyConfigs();
-                    } else {
-                        showToast('error', result.msg || '添加失败');
-                    }
-                }
-            });
-        }
-
-        function deleteProxy(id) {
-            if (!confirm('确定要删除此反向代理配置吗？')) return;
-            $.ajax({
-                url: `/api/proxy-configs/${id}`,
-                type: 'DELETE',
-                success: function(result) {
-                    if (result.code === 200) {
-                        showToast('success', '删除成功');
-                        loadProxyConfigs();
-                    } else {
-                        showToast('error', result.msg || '删除失败');
-                    }
                 }
             });
         }

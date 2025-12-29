@@ -36,12 +36,12 @@
             <div class="flex gap-2">
                 <!-- 视图切换 -->
                 <div class="join">
-                    <button id="btnCardView" onclick="switchView('card')" class="px-2 py-1.5 text-xs font-medium bg-white border border-gray-200 join-item hover:bg-gray-50">
+                    <button id="btnCardView" onclick="switchView('card')" class="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 join-item hover:bg-gray-50">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                         </svg>
                     </button>
-                    <button id="btnListView" onclick="switchView('list')" class="px-2 py-1.5 text-xs font-medium bg-white border border-gray-200 join-item hover:bg-gray-50">
+                    <button id="btnListView" onclick="switchView('list')" class="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 join-item hover:bg-gray-50">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
@@ -64,12 +64,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                     </svg>
                     刷新
-                </button>
-                <button onclick="showCreateContainerModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    创建容器
                 </button>
             </div>
         </div>
@@ -97,7 +91,7 @@
                     </select>
                 </div>
                 <div class="flex items-center gap-2" id="sortOrderContainer" style="display: none;">
-                    <button onclick="toggleSortOrder()" id="sortOrderBtn" class="px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded transition flex items-center gap-1">
+                    <button onclick="toggleSortOrder()" id="sortOrderBtn" class="px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded transition flex items-center gap-1">
                         <svg id="sortOrderIcon" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"></path>
                         </svg>
@@ -146,205 +140,6 @@
     </div>
 
     <!-- 创建容器模态框 -->
-    <dialog id="createContainerModal" class="modal">
-        <div class="modal-box max-w-4xl">
-            <h3 class="font-bold text-lg mb-4">创建新容器</h3>
-            <form id="createContainerForm" class="space-y-3">
-                <!-- 基本配置 -->
-                <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                    <h4 class="font-semibold mb-2 text-sm">基本配置</h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">容器名称 *</span></label>
-                            <div class="join w-full">
-                                <input type="text" id="createHostname" required class="input input-bordered join-item flex-1" placeholder="lxd123456">
-                                <button type="button" onclick="generateHostname()" class="btn btn-square btn-outline join-item" title="随机生成">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">操作系统镜像 *</span></label>
-                            <input type="text" id="createImage" required class="input input-bordered" placeholder="ubuntu:22.04">
-                        </div>
-                    </div>
-                    <div class="form-control mt-3">
-                        <label class="label"><span class="label-text">Root密码 *</span></label>
-                        <div class="join w-full">
-                            <input type="password" id="createPassword" required class="input input-bordered join-item flex-1" placeholder="设置root密码">
-                            <button type="button" onclick="generatePassword()" class="btn btn-square btn-outline join-item" title="随机生成">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                </svg>
-                            </button>
-                            <button type="button" onclick="togglePasswordVisibility()" class="btn btn-square btn-outline join-item" title="显示/隐藏密码">
-                                <svg id="passwordEyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 资源配置 -->
-                <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                    <h4 class="font-semibold mb-2 text-sm">资源配置</h4>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">CPU核心 *</span></label>
-                            <input type="text" id="createCPUs" required value="1" class="input input-bordered" placeholder="1">
-                        </div>
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">内存 *</span></label>
-                            <input type="text" id="createMemory" required value="256MB" class="input input-bordered" placeholder="256MB">
-                        </div>
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">硬盘 *</span></label>
-                            <input type="text" id="createDisk" required value="512MB" class="input input-bordered" placeholder="512MB">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-4 mt-3 items-end">
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createMemorySwap" checked class="checkbox checkbox-sm">
-                                <span class="label-text">启用Swap</span>
-                            </label>
-                        </div>
-                        <div class="form-control">
-                            <label class="label py-1"><span class="label-text text-sm">CPU限制(%)</span></label>
-                            <input type="text" id="createCPUAllowance" value="50%" class="input input-sm input-bordered" placeholder="50%">
-                        </div>
-                        <div class="form-control">
-                            <label class="label py-1"><span class="label-text text-sm">最大进程数</span></label>
-                            <input type="text" id="createMaxProcesses" value="512" class="input input-sm input-bordered" placeholder="512">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 网络配置 -->
-                <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                    <h4 class="font-semibold mb-2 text-sm">网络配置</h4>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">入站带宽</span></label>
-                            <input type="text" id="createIngress" value="100Mbit" class="input input-bordered" placeholder="100Mbit">
-                        </div>
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">出站带宽</span></label>
-                            <input type="text" id="createEgress" value="100Mbit" class="input input-bordered" placeholder="100Mbit">
-                        </div>
-                        <div class="form-control">
-                            <label class="label"><span class="label-text">流量限制(GB)</span></label>
-                            <input type="text" id="createTrafficLimit" value="100" class="input input-bordered" placeholder="100">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- NAT配置 -->
-                <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                    <h4 class="font-semibold mb-2 text-sm">NAT端口转发配置</h4>
-                    <div class="grid grid-cols-3 gap-4 items-end">
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createNATEnabled" checked class="checkbox checkbox-sm">
-                                <span class="label-text">启用NAT功能</span>
-                            </label>
-                        </div>
-                        <div class="form-control">
-                            <label class="label py-1"><span class="label-text text-sm">NAT规则数量</span></label>
-                            <input type="number" id="createNATLimit" min="0" value="5" class="input input-sm input-bordered" placeholder="5">
-                        </div>
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createUDPEnabled" class="checkbox checkbox-sm">
-                                <span class="label-text">允许UDP协议</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- IPv6配置 -->
-                <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                    <h4 class="font-semibold mb-2 text-sm">IPv6独立地址配置</h4>
-                    <div class="grid grid-cols-2 gap-4 items-end">
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createIPv6Enabled" class="checkbox checkbox-sm">
-                                <span class="label-text">启用IPv6功能</span>
-                            </label>
-                        </div>
-                        <div class="form-control">
-                            <label class="label py-1"><span class="label-text text-sm">IPv6数量限制</span></label>
-                            <input type="number" id="createIPv6Limit" min="0" value="1" class="input input-sm input-bordered" placeholder="1">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 反向代理配置 -->
-                <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                    <h4 class="font-semibold mb-2 text-sm">Nginx反向代理配置</h4>
-                    <div class="grid grid-cols-2 gap-4 items-end">
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createProxyEnabled" class="checkbox checkbox-sm">
-                                <span class="label-text">启用反向代理</span>
-                            </label>
-                        </div>
-                        <div class="form-control">
-                            <label class="label py-1"><span class="label-text text-sm">域名数量限制</span></label>
-                            <input type="number" id="createProxyLimit" min="0" value="1" class="input input-sm input-bordered" placeholder="1">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 高级选项 -->
-                <div class="bg-gray-50 p-3 rounded border border-gray-200">
-                    <h4 class="font-semibold mb-2 text-sm">高级选项</h4>
-                    <div class="grid grid-cols-2 gap-4 items-end">
-                        <div class="form-control">
-                            <label class="label py-1"><span class="label-text text-sm">磁盘IO限速</span></label>
-                            <input type="text" id="createDiskIOLimit" value="100MB" class="input input-sm input-bordered" placeholder="100MB">
-                        </div>
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createEnableLXCFS" checked class="checkbox checkbox-sm">
-                                <span class="label-text">启用LXCFS资源视图（推荐）</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mt-2 items-center">
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createAllowNesting" class="checkbox checkbox-sm">
-                                <span class="label-text">允许嵌套虚拟化</span>
-                            </label>
-                        </div>
-                        <div class="form-control">
-                            <label class="label cursor-pointer justify-start gap-2 h-10">
-                                <input type="checkbox" id="createPrivileged" class="checkbox checkbox-sm">
-                                <span class="label-text">特权模式</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-action">
-                    <button type="button" onclick="closeCreateContainerModal()" class="btn">取消</button>
-                    <button type="submit" class="btn btn-primary">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        创建容器
-                    </button>
-                </div>
-            </form>
-        </div>
-        <form method="dialog" class="modal-backdrop"><button onclick="closeCreateContainerModal()">close</button></form>
-    </dialog>
-
     <script>
         const nodeId = parseInt({{ .node_id }});
         let currentView = localStorage.getItem('containerView') || 'card'; // 默认卡片视图
@@ -364,15 +159,6 @@
             loadNodeInfo();
             loadContainers();
             updateViewButtons(); // 更新视图按钮状态
-
-            // 页面加载时自动生成主机名和密码
-            generateHostname();
-            generatePassword();
-
-            $('#createContainerForm').on('submit', function(e) {
-                e.preventDefault();
-                submitCreateContainer();
-            });
         });
 
         function loadNodeInfo() {
@@ -773,126 +559,6 @@
                     刷新
                 `);
                 showToast('error', xhr.responseJSON?.msg || '刷新失败');
-            });
-        }
-
-        // 随机生成主机名：lxd + 6位数字
-        function generateHostname() {
-            const randomNum = Math.floor(100000 + Math.random() * 900000);
-            $('#createHostname').val('lxd' + randomNum);
-        }
-
-        // 随机生成12位密码
-        function generatePassword() {
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*';
-            let password = '';
-            for (let i = 0; i < 12; i++) {
-                password += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            $('#createPassword').val(password);
-        }
-
-        // 切换密码显示/隐藏
-        function togglePasswordVisibility() {
-            const $input = $('#createPassword');
-            const $icon = $('#passwordEyeIcon');
-            
-            if ($input.attr('type') === 'password') {
-                $input.attr('type', 'text');
-                $icon.html(`
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
-                `);
-            } else {
-                $input.attr('type', 'password');
-                $icon.html(`
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                `);
-            }
-        }
-
-        function showCreateContainerModal() {
-            document.getElementById('createContainerModal').showModal();
-        }
-
-        function closeCreateContainerModal() {
-            document.getElementById('createContainerModal').close();
-            $('#createContainerForm')[0].reset();
-        }
-
-        function submitCreateContainer() {
-            const $btn = $('#createContainerForm button[type="submit"]');
-            $btn.prop('disabled', true).html('<span class="loading loading-spinner loading-xs"></span> 创建中...');
-
-            const data = {
-                node_id: parseInt(nodeId),
-                hostname: $('#createHostname').val(),
-                image: $('#createImage').val(),
-                password: $('#createPassword').val(),
-                // 资源配置
-                cpus: parseInt($('#createCPUs').val()) || 1,
-                memory: $('#createMemory').val(),
-                disk: $('#createDisk').val(),
-                memory_swap: $('#createMemorySwap').is(':checked'),
-                cpu_allowance: $('#createCPUAllowance').val(),
-                max_processes: parseInt($('#createMaxProcesses').val()) || 0,
-                disk_io_limit: $('#createDiskIOLimit').val(),
-                // 网络配置
-                ingress: $('#createIngress').val(),
-                egress: $('#createEgress').val(),
-                traffic_limit: parseInt($('#createTrafficLimit').val()) || 0,
-                // NAT配置 (这些是业务逻辑参数，不在后端struct中)
-                nat_enabled: $('#createNATEnabled').is(':checked'),
-                nat_limit: parseInt($('#createNATLimit').val()) || 0,
-                udp_enabled: $('#createUDPEnabled').is(':checked'),
-                // IPv6配置
-                ipv6_enabled: $('#createIPv6Enabled').is(':checked'),
-                ipv6_limit: parseInt($('#createIPv6Limit').val()) || 0,
-                // 反向代理配置
-                proxy_enabled: $('#createProxyEnabled').is(':checked'),
-                proxy_limit: parseInt($('#createProxyLimit').val()) || 0,
-                // 高级选项
-                allow_nesting: $('#createAllowNesting').is(':checked'),
-                privileged: $('#createPrivileged').is(':checked'),
-                enable_lxcfs: $('#createEnableLXCFS').is(':checked')
-            };
-
-            $.ajax({
-                url: '/api/containers/create',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(result) {
-                    $btn.prop('disabled', false).html(`
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        创建容器
-                    `);
-                    
-                    if (result.code === 200) {
-                        showToast('success', '容器创建成功');
-                        closeCreateContainerModal();
-                        // 创建成功后等待3秒让lxdapi缓存更新
-                        setTimeout(() => loadContainers(), 3000);
-                    } else {
-                        showToast('error', result.msg || '创建失败');
-                    }
-                },
-                error: function(xhr) {
-                    $btn.prop('disabled', false).html(`
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        创建容器
-                    `);
-                    
-                    let errorMsg = '创建失败，请检查网络连接';
-                    if (xhr.responseJSON && xhr.responseJSON.msg) {
-                        errorMsg = xhr.responseJSON.msg;
-                    }
-                    showToast('error', errorMsg);
-                }
             });
         }
 

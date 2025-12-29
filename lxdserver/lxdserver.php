@@ -6,7 +6,6 @@ use think\Db;
 
 define('LXDSERVER_DEBUG', true);
 
-// 调试日志输出函数
 function lxdserver_debug($message, $data = null) {
     if (!LXDSERVER_DEBUG) return;
     $log = '[LXD-DEBUG] ' . $message;
@@ -16,17 +15,15 @@ function lxdserver_debug($message, $data = null) {
     error_log($log);
 }
 
-// 插件元数据信息
 function lxdserver_MetaData()
 {
     return [
-        'DisplayName' => '魔方财务-LXD对接插件 by xkatld',
-        'APIVersion'  => '1.0.6',
+        'DisplayName' => '魔方财务-LXD对接插件V1 by xkatld',
+        'APIVersion'  => '1.1.0',
         'HelpDoc'     => 'https://github.com/xkatld/zjmf-lxd-server',
     ];
 }
 
-// 产品配置选项定义
 function lxdserver_ConfigOptions()
 {
     return [
@@ -136,27 +133,12 @@ function lxdserver_ConfigOptions()
             'default'     => '512',
             'key'         => 'max_processes',
         ],
-        'ipv4_limit' => [
-            'type'        => 'text',
-            'name'        => 'IPv4绑定数量',
-            'description' => 'IPv4地址数量上限',
-            'default'     => '1',
-            'key'         => 'ipv4_limit',
-        ],
         'ipv6_limit' => [
             'type'        => 'text',
             'name'        => 'IPv6绑定数量',
             'description' => 'IPv6地址数量上限',
             'default'     => '1',
             'key'         => 'ipv6_limit',
-        ],
-        'ipv4_allow_delete' => [
-            'type'        => 'dropdown',
-            'name'        => 'IPv4允许删除',
-            'description' => '是否可以删除IPv4地址',
-            'default'     => 'false',
-            'key'         => 'ipv4_allow_delete',
-            'options'     => ['true' => '允许', 'false' => '禁止'],
         ],
         'ipv6_allow_delete' => [
             'type'        => 'dropdown',
@@ -208,7 +190,6 @@ function lxdserver_ConfigOptions()
     ];
 }
 
-// 测试API连接
 function lxdserver_TestLink($params)
 {
     lxdserver_debug('开始测试API连接', $params);
@@ -273,7 +254,6 @@ function lxdserver_TestLink($params)
     }
 }
 
-// 客户区页面定义
 function lxdserver_ClientArea($params)
 {
     $pages = [
@@ -298,7 +278,6 @@ function lxdserver_ClientArea($params)
     return $pages;
 }
 
-// 客户区输出处理
 function lxdserver_ClientAreaOutput($params, $key)
 {
     lxdserver_debug('ClientAreaOutput调用', ['key' => $key, 'action' => $_GET['action'] ?? null]);
@@ -512,7 +491,6 @@ function lxdserver_getIndependentIPv6List($params)
     return [];
 }
 
-// 允许客户端调用的函数列表
 function lxdserver_AllowFunction()
 {
     return [
@@ -520,7 +498,6 @@ function lxdserver_AllowFunction()
     ];
 }
 
-// 创建LXD容器
 function lxdserver_CreateAccount($params)
 {
     lxdserver_debug('开始创建容器', ['domain' => $params['domain']]);
@@ -558,7 +535,6 @@ function lxdserver_CreateAccount($params)
     if (isset($res['code']) && $res['code'] == '200') {
         sleep(2);
         
-        // 从创建响应中读取IP
         $dedicatedip = '';
         $assignedips = '';
         
@@ -577,6 +553,8 @@ function lxdserver_CreateAccount($params)
             'assignedips'  => $assignedips,
             'domainstatus' => 'Active',
             'username'     => 'root',
+            'bwlimit'      => (int)($params['configoptions']['traffic_limit'] ?? 0),
+            'bwusage'      => 0,
         ];
 
         try {
@@ -592,7 +570,6 @@ function lxdserver_CreateAccount($params)
     }
 }
 
-// 同步容器信息
 function lxdserver_Sync($params)
 {
     $data = [
@@ -612,6 +589,20 @@ function lxdserver_Sync($params)
                     'assignedips' => $ipInfo['assignedips'],
                 ];
 
+                if (isset($params['configoptions']['traffic_limit'])) {
+                    $update_data['bwlimit'] = (int)$params['configoptions']['traffic_limit'];
+                }
+
+                $trafficData = [
+                    'url'  => '/api/traffic?hostname=' . urlencode($params['domain']),
+                    'type' => 'application/x-www-form-urlencoded',
+                    'data' => [],
+                ];
+                $trafficRes = lxdserver_Curl($params, $trafficData, 'GET');
+                if (isset($trafficRes['code']) && $trafficRes['code'] == 200 && isset($trafficRes['data']['TotalGB'])) {
+                    $update_data['bwusage'] = (float)$trafficRes['data']['TotalGB'];
+                }
+
                 Db::name('host')->where('id', $params['hostid'])->update($update_data);
             } catch (Exception $e) {
                 lxdserver_debug('同步数据库失败', ['error' => $e->getMessage()]);
@@ -623,7 +614,30 @@ function lxdserver_Sync($params)
     return ['status' => 'error', 'msg' => $res['msg'] ?? '同步失败'];
 }
 
-// 删除LXD容器
+function lxdserver_UsageUpdate($params)
+{
+    $data = [
+        'url'  => '/api/traffic?hostname=' . urlencode($params['domain']),
+        'type' => 'application/x-www-form-urlencoded',
+        'data' => [],
+    ];
+    
+    $res = lxdserver_Curl($params, $data, 'GET');
+    
+    if (isset($res['code']) && $res['code'] == 200 && isset($res['data']['TotalGB'])) {
+        $usedGB = (float)$res['data']['TotalGB'];
+        
+        try {
+            Db::name('host')->where('id', $params['hostid'])->update(['bwusage' => $usedGB]);
+            return ['status' => 'success', 'msg' => '流量同步成功'];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'msg' => '流量同步失败: ' . $e->getMessage()];
+        }
+    }
+    
+    return ['status' => 'error', 'msg' => $res['msg'] ?? '获取流量失败'];
+}
+
 function lxdserver_TerminateAccount($params)
 {
     $data = [
@@ -638,7 +652,6 @@ function lxdserver_TerminateAccount($params)
         : ['status' => 'error', 'msg' => $res['msg'] ?? '删除失败'];
 }
 
-// 启动LXD容器
 function lxdserver_On($params)
 {
     $data = [
@@ -653,7 +666,6 @@ function lxdserver_On($params)
         : ['status' => 'error', 'msg' => $res['msg'] ?? '开机失败'];
 }
 
-// 关闭LXD容器
 function lxdserver_Off($params)
 {
     $data = [
@@ -670,7 +682,6 @@ function lxdserver_Off($params)
     }
 }
 
-// 暂停LXD容器
 function lxdserver_SuspendAccount($params)
 {
     lxdserver_debug('开始暂停容器', ['domain' => $params['domain']]);
@@ -691,7 +702,6 @@ function lxdserver_SuspendAccount($params)
     }
 }
 
-// 恢复LXD容器
 function lxdserver_UnsuspendAccount($params)
 {
     lxdserver_debug('开始解除暂停容器', ['domain' => $params['domain']]);
@@ -712,7 +722,6 @@ function lxdserver_UnsuspendAccount($params)
     }
 }
 
-// 重启LXD容器
 function lxdserver_Reboot($params)
 {
     $data = [
@@ -729,7 +738,6 @@ function lxdserver_Reboot($params)
     }
 }
 
-// 获取容器NAT规则数量
 function lxdserver_getNATRuleCount($params)
 {
     $data = [
@@ -782,7 +790,6 @@ function lxdserver_getNATRuleCount($params)
     return 0;
 }
 
-// 添加NAT端口转发
 function lxdserver_natadd($params)
 {
     $network_mode = $params['configoptions']['network_mode'] ?? 'mode1';
@@ -900,7 +907,6 @@ function lxdserver_natadd($params)
     }
 }
 
-// 删除NAT端口转发
 function lxdserver_natdel($params)
 {
     
@@ -982,7 +988,6 @@ function lxdserver_natdel($params)
     }
 }
 
-// 查询容器运行状态
 function lxdserver_Status($params)
 {
     $data = [
@@ -1022,7 +1027,6 @@ function lxdserver_Status($params)
     }
 }
 
-// 重置容器密码
 function lxdserver_CrackPassword($params, $new_pass)
 {
     $data = [
@@ -1047,7 +1051,6 @@ function lxdserver_CrackPassword($params, $new_pass)
     }
 }
 
-// 重装容器操作系统
 function lxdserver_Reinstall($params)
 {
     if (empty($params['reinstall_os'])) {
@@ -1088,7 +1091,6 @@ function lxdserver_Reinstall($params)
     }
 }
 
-// 发送JSON格式的cURL请求
 function lxdserver_JSONCurl($params, $data = [], $request = 'POST')
 {
     $curl = curl_init();
@@ -1131,7 +1133,6 @@ function lxdserver_JSONCurl($params, $data = [], $request = 'POST')
     return json_decode($response, true);
 }
 
-// 发送通用的cURL请求
 function lxdserver_Curl($params, $data = [], $request = 'POST')
 {
     $curl = curl_init();
@@ -1205,7 +1206,6 @@ function lxdserver_Curl($params, $data = [], $request = 'POST')
     return $decoded;
 }
 
-// 转换API响应以适配前端
 function lxdserver_TransformAPIResponse($action, $response)
 {
     if (isset($response['error'])) {
@@ -1324,7 +1324,6 @@ function lxdserver_TransformAPIResponse($action, $response)
     return $response;
 }
 
-// 获取NAT规则列表
 function lxdserver_natlist($params)
 {
     
@@ -1342,12 +1341,10 @@ function lxdserver_natlist($params)
 
 function lxdserver_natcheck($params)
 {
-    // 先尝试从URL查询参数获取
     $dport = intval($_GET['dport'] ?? 0);
     $dtype = strtolower(trim($_GET['dtype'] ?? ''));
     $hostname = trim($_GET['hostname'] ?? '');
 
-    // 如果GET参数为空，尝试从POST获取
     if ($dport <= 0) {
         $dport = intval($_POST['dport'] ?? 0);
     }
@@ -1358,7 +1355,6 @@ function lxdserver_natcheck($params)
         $hostname = trim($_POST['hostname'] ?? '');
     }
 
-    // 如果还是为空，尝试从原始POST数据解析
     if ($dport <= 0 || empty($hostname)) {
         $postRaw = file_get_contents("php://input");
         if (!empty($postRaw)) {
@@ -1375,7 +1371,6 @@ function lxdserver_natcheck($params)
         }
     }
 
-    // 如果hostname还是空，使用params中的domain
     if (empty($hostname)) {
         $hostname = trim($params['domain'] ?? '');
     }
@@ -1390,7 +1385,6 @@ function lxdserver_natcheck($params)
         'params_domain' => $params['domain'] ?? 'null'
     ]);
 
-    // 参数验证
     if ($dport <= 0) {
         return ['code' => 400, 'msg' => '缺少端口参数', 'data' => ['available' => false, 'reason' => '缺少端口参数']];
     }
@@ -1404,7 +1398,6 @@ function lxdserver_natcheck($params)
         return ['code' => 400, 'msg' => '容器标识缺失', 'data' => ['available' => false, 'reason' => '容器标识缺失']];
     }
 
-    // 使用GET请求调用后端API
     $queryParams = http_build_query([
         'hostname' => $hostname,
         'protocol' => $dtype,
@@ -1430,7 +1423,6 @@ function lxdserver_natcheck($params)
     return $res;
 }
 
-// 获取Web控制台URL
 function lxdserver_vnc($params) {
     lxdserver_debug('VNC控制台请求', ['domain' => $params['domain']]);
 
@@ -1480,7 +1472,6 @@ function lxdserver_vnc($params) {
     ];
 }
 
-// 后台自定义按钮定义
 function lxdserver_AdminButton($params)
 {
     if (!empty($params['domain'])) {
@@ -1491,7 +1482,6 @@ function lxdserver_AdminButton($params)
     return [];
 }
 
-// 处理流量重置请求
 function lxdserver_TrafficReset($params)
 {
     lxdserver_debug('流量重置请求', ['domain' => $params['domain']]);
@@ -1516,7 +1506,6 @@ function lxdserver_TrafficReset($params)
     }
 }
 
-// 获取IPv6绑定数量
 function lxdserver_getIPv6BindingCount($params)
 {
     $data = [
@@ -1569,7 +1558,6 @@ function lxdserver_ipv6add($params)
     }
 }
 
-// 删除IPv6独立绑定
 function lxdserver_ipv6del($params)
 {
     $ipv6_allow_delete = ($params['configoptions']['ipv6_allow_delete'] ?? 'true') === 'true';
@@ -1602,7 +1590,6 @@ function lxdserver_ipv6del($params)
     }
 }
 
-// 获取IPv6绑定列表
 function lxdserver_ipv6list($params)
 {
     
@@ -1621,7 +1608,6 @@ function lxdserver_ipv6list($params)
     }
 }
 
-// 添加反向代理
 function lxdserver_proxyadd($params)
 {
     $proxy_enabled = ($params['configoptions']['proxy_enabled'] ?? 'false') === 'true';
@@ -1643,12 +1629,10 @@ function lxdserver_proxyadd($params)
         return ['status' => 'error', 'msg' => '请输入域名'];
     }
 
-    // 验证域名格式
     if (!preg_match('/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/', $domain)) {
         return ['status' => 'error', 'msg' => '域名格式无效'];
     }
 
-    // 检查数量限制
     $proxy_limit = intval($params['configoptions']['proxy_limit'] ?? 1);
     $current_count = lxdserver_getProxyCount($params);
     
@@ -1656,7 +1640,6 @@ function lxdserver_proxyadd($params)
         return ['status' => 'error', 'msg' => "已达到反向代理数量上限（{$proxy_limit}个），无法继续添加"];
     }
 
-    // 如果启用SSL且类型是custom，检查证书和私钥
     if ($ssl_enabled && $ssl_type === 'custom' && (empty($ssl_cert) || empty($ssl_key))) {
         return ['status' => 'error', 'msg' => '启用自定义SSL证书时，必须提供证书和私钥内容'];
     }
@@ -1668,7 +1651,6 @@ function lxdserver_proxyadd($params)
                    '&ssl_enabled=' . ($ssl_enabled ? 'true' : 'false') .
                    '&ssl_type=' . urlencode($ssl_type);
     
-    // 如果是自定义证书，添加证书内容
     if ($ssl_enabled && $ssl_type === 'custom') {
         $requestData .= '&ssl_cert=' . urlencode($ssl_cert) .
                        '&ssl_key=' . urlencode($ssl_key);
@@ -1689,7 +1671,6 @@ function lxdserver_proxyadd($params)
     }
 }
 
-// 删除反向代理
 function lxdserver_proxydel($params)
 {
     parse_str(file_get_contents("php://input"), $post);
@@ -1717,7 +1698,6 @@ function lxdserver_proxydel($params)
     }
 }
 
-// 获取反向代理列表
 function lxdserver_proxylist($params)
 {
     $data = [
@@ -1735,7 +1715,6 @@ function lxdserver_proxylist($params)
     }
 }
 
-// 检查域名是否可用
 function lxdserver_proxycheck($params)
 {
     parse_str(file_get_contents("php://input"), $post);
@@ -1761,7 +1740,6 @@ function lxdserver_proxycheck($params)
     }
 }
 
-// 获取反向代理数量
 function lxdserver_getProxyCount($params)
 {
     $data = [

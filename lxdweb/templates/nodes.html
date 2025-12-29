@@ -115,29 +115,6 @@
                     <textarea id="nodeDescription" rows="3" class="textarea textarea-bordered"></textarea>
                 </div>
                 
-                <div class="divider text-sm text-gray-600">同步配置</div>
-                
-                <div class="form-control">
-                    <label class="label"><span class="label-text">同步预设</span></label>
-                    <select id="syncPreset" onchange="handlePresetChange()" class="select select-bordered">
-                        <option value="low">低配 (批次3, 间隔10秒)</option>
-                        <option value="medium" selected>中配 (批次5, 间隔5秒)</option>
-                        <option value="high">高配 (批次10, 间隔3秒)</option>
-                        <option value="custom">自定义</option>
-                    </select>
-                </div>
-                
-                <div id="customSyncSettings" class="hidden space-y-4">
-                    <div class="form-control">
-                        <label class="label"><span class="label-text">批次大小</span></label>
-                        <input type="number" id="batchSize" min="1" max="20" value="5" class="input input-bordered">
-                    </div>
-                    <div class="form-control">
-                        <label class="label"><span class="label-text">批次间隔 (秒)</span></label>
-                        <input type="number" id="batchInterval" min="1" max="30" value="5" class="input input-bordered">
-                    </div>
-                </div>
-                
                 <div class="modal-action">
                     <button type="button" onclick="closeModal()" class="btn">取消</button>
                     <button type="submit" class="btn btn-primary">保存</button>
@@ -145,6 +122,45 @@
             </form>
         </div>
         <form method="dialog" class="modal-backdrop"><button onclick="closeModal()">close</button></form>
+    </dialog>
+
+    <!-- 同步配置模态框 -->
+    <dialog id="syncModal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg mb-4" id="syncModalTitle">同步配置</h3>
+            <form id="syncForm" class="space-y-4">
+                <input type="hidden" id="syncNodeId">
+                
+                <div class="form-control">
+                    <label class="label cursor-pointer justify-start gap-2">
+                        <input type="checkbox" id="syncAutoSync" class="checkbox">
+                        <span class="label-text">启用自动同步</span>
+                    </label>
+                </div>
+                
+                <div class="form-control">
+                    <label class="label"><span class="label-text">同步间隔</span></label>
+                    <input type="number" id="syncSyncInterval" min="60" max="3600" value="300" class="input input-bordered">
+                    <label class="label"><span class="label-text-alt">单位：秒，建议300秒</span></label>
+                </div>
+                
+                <div class="form-control">
+                    <label class="label"><span class="label-text">批次大小</span></label>
+                    <input type="number" id="syncBatchSize" min="1" max="20" value="5" class="input input-bordered">
+                </div>
+                <div class="form-control">
+                    <label class="label"><span class="label-text">批次间隔</span></label>
+                    <input type="number" id="syncBatchInterval" min="1" max="30" value="5" class="input input-bordered">
+                    <label class="label"><span class="label-text-alt">单位：秒</span></label>
+                </div>
+                
+                <div class="modal-action">
+                    <button type="button" onclick="closeSyncModal()" class="btn">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button onclick="closeSyncModal()">close</button></form>
     </dialog>
 
     <dialog id="importModal" class="modal">
@@ -267,6 +283,7 @@
                                 <a href="/nodes/${node.id}" class="px-2 py-1 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded transition">详情</a>
                                 <button onclick="testNode(${node.id})" class="px-2 py-1 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded transition" title="测试连接">测试</button>
                                 <button onclick="editNode(${node.id})" class="px-2 py-1 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded transition">编辑</button>
+                                <button onclick="editNodeSync(${node.id})" class="px-2 py-1 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded transition">同步</button>
                                 <button onclick="deleteNode(${node.id})" class="px-2 py-1 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition">删除</button>
                             </div>
                         </td>
@@ -334,8 +351,11 @@
                             <a href="/nodes/${node.id}" class="flex-1 px-2 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded transition text-center">详情</a>
                             <button onclick="testNode(${node.id})" class="flex-1 px-2 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded transition" title="测试连接">测试</button>
                         </div>
-                        <div class="flex gap-1.5">
+                        <div class="flex gap-1.5 mb-2">
                             <button onclick="refreshNode(${node.id})" class="flex-1 px-2 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded transition" title="刷新节点信息">刷新</button>
+                            <button onclick="editNodeSync(${node.id})" class="flex-1 px-2 py-1.5 text-xs font-medium text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded transition">同步</button>
+                        </div>
+                        <div class="flex gap-1.5">
                             <button onclick="editNode(${node.id})" class="flex-1 px-2 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded transition">编辑</button>
                             <button onclick="deleteNode(${node.id})" class="flex-1 px-2 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded transition">删除</button>
                         </div>
@@ -556,24 +576,11 @@
                 alert('JSON格式错误: ' + e.message);
             }
         }
-
-        function handlePresetChange() {
-            const preset = $('#syncPreset').val();
-            if (preset === 'custom') {
-                $('#customSyncSettings').removeClass('hidden');
-            } else {
-                $('#customSyncSettings').addClass('hidden');
-            }
-        }
         
         function showAddModal() {
             $('#modalTitle').text('添加节点');
             $('#nodeForm')[0].reset();
             $('#nodeId').val('');
-            $('#syncPreset').val('medium');
-            $('#batchSize').val(5);
-            $('#batchInterval').val(5);
-            handlePresetChange();
             document.getElementById('nodeModal').showModal();
         }
 
@@ -587,11 +594,24 @@
                     $('#nodeAddress').val(node.address);
                     $('#nodeApiKey').val(node.api_key);
                     $('#nodeDescription').val(node.description);
-                    $('#syncPreset').val(node.sync_preset || 'medium');
-                    $('#batchSize').val(node.batch_size || 5);
-                    $('#batchInterval').val(node.batch_interval || 5);
-                    handlePresetChange();
                     document.getElementById('nodeModal').showModal();
+                } else {
+                    alert('获取节点信息失败');
+                }
+            });
+        }
+
+        function editNodeSync(id) {
+            $.get(`/api/nodes/${id}`, function(result) {
+                if (result.code === 200) {
+                    const node = result.data;
+                    $('#syncModalTitle').text(`同步配置 - ${node.name}`);
+                    $('#syncNodeId').val(node.id);
+                    $('#syncAutoSync').prop('checked', node.auto_sync || false);
+                    $('#syncSyncInterval').val(node.sync_interval || 300);
+                    $('#syncBatchSize').val(node.batch_size || 5);
+                    $('#syncBatchInterval').val(node.batch_interval || 5);
+                    document.getElementById('syncModal').showModal();
                 } else {
                     alert('获取节点信息失败');
                 }
@@ -602,6 +622,10 @@
             document.getElementById('nodeModal').close();
         }
 
+        function closeSyncModal() {
+            document.getElementById('syncModal').close();
+        }
+
         $('#nodeForm').on('submit', function(e) {
             e.preventDefault();
             const id = $('#nodeId').val();
@@ -609,10 +633,7 @@
                 name: $('#nodeName').val(),
                 address: $('#nodeAddress').val(),
                 api_key: $('#nodeApiKey').val(),
-                description: $('#nodeDescription').val(),
-                sync_preset: $('#syncPreset').val(),
-                batch_size: parseInt($('#batchSize').val()) || 5,
-                batch_interval: parseInt($('#batchInterval').val()) || 5
+                description: $('#nodeDescription').val()
             };
             const url = id ? `/api/nodes/${id}` : '/api/nodes';
             const method = id ? 'PUT' : 'POST';
@@ -666,6 +687,35 @@
                 alert('刷新失败');
             });
         }
+
+        $('#syncForm').on('submit', function(e) {
+            e.preventDefault();
+            const id = $('#syncNodeId').val();
+            const data = {
+                auto_sync: $('#syncAutoSync').is(':checked'),
+                sync_interval: parseInt($('#syncSyncInterval').val()) || 300,
+                batch_size: parseInt($('#syncBatchSize').val()) || 5,
+                batch_interval: parseInt($('#syncBatchInterval').val()) || 5
+            };
+            $.ajax({
+                url: `/api/nodes/${id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(result) {
+                    if (result.code === 200) {
+                        closeSyncModal();
+                        loadNodes();
+                        alert('同步配置更新成功');
+                    } else {
+                        alert(result.msg);
+                    }
+                },
+                error: function() {
+                    alert('更新失败');
+                }
+            });
+        });
 
         function deleteNode(id) {
             if (!confirm('⚠️ 警告：确定要删除此节点吗？\n\n删除后该节点的所有容器、NAT规则等配置信息都将丢失，且无法恢复！')) return;
