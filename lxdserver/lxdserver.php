@@ -20,9 +20,9 @@ function lxdserver_debug($message, $data = null) {
 function lxdserver_MetaData()
 {
     return [
-        'DisplayName' => '魔方财务-LXD对接插件 by xkatld',
+        'DisplayName' => '魔方财务-LXD对接插件 by mastalee928',
         'APIVersion'  => '1.0.6',
-        'HelpDoc'     => 'https://github.com/xkatld/zjmf-lxd-server',
+        'HelpDoc'     => 'https://github.com/mastalee928/zjmf-lxd-server',
     ];
 }
 

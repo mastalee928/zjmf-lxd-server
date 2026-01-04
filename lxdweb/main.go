@@ -1,14 +1,14 @@
 // @title LXD Web 管理平台
 // @version 1.0.3
 // @description LXD 容器管理 Web 平台，提供多节点管理、容器监控、NAT 配置等功能
-// @termsOfService https://github.com/xkatld/zjmf-lxd-server
+// @termsOfService https://github.com/mastalee928/zjmf-lxd-server
 
-// @contact.name xkatld
-// @contact.url https://github.com/xkatld/zjmf-lxd-server
-// @contact.email xkatld@example.com
+// @contact.name mastalee928
+// @contact.url https://github.com/mastalee928/zjmf-lxd-server
+// @contact.email mastalee928@example.com
 
 // @license.name MIT
-// @license.url https://github.com/xkatld/zjmf-lxd-server/blob/main/LICENSE
+// @license.url https://github.com/mastalee928/zjmf-lxd-server/blob/main/LICENSE
 
 // @host localhost:3000
 // @BasePath /

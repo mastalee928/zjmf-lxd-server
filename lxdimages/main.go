@@ -18,8 +18,8 @@ import (
 
 const (
 	Version   = "1.0.1"
-	Developer = "xkatld"
-	RepoURL   = "https://github.com/xkatld/zjmf-lxd-server"
+	Developer = "mastalee928"
+	RepoURL   = "https://github.com/mastalee928/zjmf-lxd-server"
 )
 
 func main() {

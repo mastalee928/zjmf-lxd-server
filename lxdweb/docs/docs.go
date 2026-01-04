@@ -9,15 +9,15 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "https://github.com/xkatld/zjmf-lxd-server",
+        "termsOfService": "https://github.com/mastalee928/zjmf-lxd-server",
         "contact": {
-            "name": "xkatld",
-            "url": "https://github.com/xkatld/zjmf-lxd-server",
-            "email": "xkatld@example.com"
+            "name": "mastalee928",
+            "url": "https://github.com/mastalee928/zjmf-lxd-server",
+            "email": "mastalee928@example.com"
         },
         "license": {
             "name": "MIT",
-            "url": "https://github.com/xkatld/zjmf-lxd-server/blob/main/LICENSE"
+            "url": "https://github.com/mastalee928/zjmf-lxd-server/blob/main/LICENSE"
         },
         "version": "{{.Version}}"
     },

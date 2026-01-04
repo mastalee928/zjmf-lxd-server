@@ -121,14 +121,14 @@ definitions:
 host: localhost:3000
 info:
   contact:
-    email: xkatld@example.com
-    name: xkatld
-    url: https://github.com/xkatld/zjmf-lxd-server
+    email: mastalee928@example.com
+    name: mastalee928
+    url: https://github.com/mastalee928/zjmf-lxd-server
   description: 基于 Session 的认证
   license:
     name: MIT
-    url: https://github.com/xkatld/zjmf-lxd-server/blob/main/LICENSE
-  termsOfService: https://github.com/xkatld/zjmf-lxd-server
+    url: https://github.com/mastalee928/zjmf-lxd-server/blob/main/LICENSE
+  termsOfService: https://github.com/mastalee928/zjmf-lxd-server
   title: LXD Web 管理平台
   version: 1.0.3
 paths:

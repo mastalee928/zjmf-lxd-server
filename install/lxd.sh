@@ -36,7 +36,7 @@ while [[ $# -gt 0 ]]; do
       echo "  $0 -f           # 强制重新安装"
       echo "  $0 -d           # 卸载 LXD"
       echo
-      echo "详细教程: https://github.com/xkatld/zjmf-lxd-server/wiki"
+      echo "详细教程: https://github.com/mastalee928/zjmf-lxd-server/wiki"
       exit 0;;
     *) err "未知参数: $1 (使用 -h 查看帮助)";;
   esac
@@ -465,4 +465,4 @@ echo "  1. 重新登录系统"
 echo "  2. 执行: source /etc/profile.d/snap.sh"
 echo "  3. 执行: export PATH=\"/snap/bin:/var/lib/snapd/snap/bin:\$PATH\""
 echo
-ok "详细教程: https://github.com/xkatld/zjmf-lxd-server/wiki"
+ok "详细教程: https://github.com/mastalee928/zjmf-lxd-server/wiki"
